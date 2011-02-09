@@ -17,4 +17,10 @@ describe "Corto" do
     b = corto.deflate(a)
     b.should == "http://www.armoredcode.com"
   end
+  
+  it "should handle a non existing shrink" do
+    a = corto.deflate('this can not be a valid shrinked url')
+    a.should.nil? == true
+  end
+  
 end

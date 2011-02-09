@@ -2,37 +2,69 @@
 
 require 'lib/corto'
 require 'getoptlong'
+require 'ap'
+require 'pp'
 
 opts = GetoptLong.new(
   [ '--help', '-h', GetoptLong::NO_ARGUMENT ],
-  [ '--version', '-v', GetoptLong::NO_ARGUMENT ]
+  [ '--version', '-v', GetoptLong::NO_ARGUMENT ], 
+  [ '--purge', '-P', GetoptLong::NO_ARGUMENT ], 
+  [ '--count', '-c', GetoptLong::NO_ARGUMENT],
+  [ '--deflate', '-d', GetoptLong::NO_ARGUMENT]
 )
 
+shrink = true
 begin 
 opts.each do |opt, arg|
   case opt
     when '--help'
-      puts 'usage: corto [-h|-v] url_to_shrink'
+      ap 'usage: corto [-h|-v|-c|-P] url_to_shrink'
       exit 0
     when '--version'
       @version = File.exist?('VERSION') ? File.read('VERSION') : ""
-      puts @version
+      ap @version
       exit 0
+    when '--purge'
+      corto = Corto.new
+      corto.purge
+      ap 'corto: ' +corto.db_name+' successfully purged'
+      exit 0
+    when '--count'
+      corto = Corto.new
+      c = corto.count
+      
+      ap 'corto: ' + corto.db_name+' contains ' + c.to_s + ' shortened urls.'
+      
+      exit 0
+    when '--deflate'
+      shrink = false
+      
   end
 end
 rescue 
   exit 0
 end
 if ARGV.length != 1
-  raise 'usage: corto [-h|-v] url_to_shrink'
+  raise 'usage: corto [-h|-v|-c|-P] url_to_shrink'
   exit 0
 end
 
 corto = Corto.new 
-s = corto.shrink(ARGV[0])
-if (!s.nil?) 
-  puts 'corto: ' + ARGV[0] + ' shrinked as ' + s
+if (shrink)
+  s = corto.shrink(ARGV[0])
+  if (!s.nil?) 
+    puts 'corto: ' + ARGV[0] + ' shrinked as ' + s
+  else
+    puts 'corto: it seems ' + ARGV[0] + ' is not a valid url to shrink'
+  end
 else
-  puts 'corto: it seems ' + ARGV[0] + ' is not a valid url to shrink'
+  s = corto.deflate(ARGV[0])
+  if (!s.nil?) 
+    puts 'corto: ' + ARGV[0] + ' deflated is ' + s
+  else
+    puts 'corto: it seems ' + ARGV[0] + ' is not a known shrinked url'
+  end
 end
+
+
 exit 0  
