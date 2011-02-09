@@ -1,0 +1,38 @@
+#!/usr/bin/env ruby
+
+require 'lib/corto'
+require 'getoptlong'
+
+opts = GetoptLong.new(
+  [ '--help', '-h', GetoptLong::NO_ARGUMENT ],
+  [ '--version', '-v', GetoptLong::NO_ARGUMENT ]
+)
+
+begin 
+opts.each do |opt, arg|
+  case opt
+    when '--help'
+      puts 'usage: corto [-h|-v] url_to_shrink'
+      exit 0
+    when '--version'
+      @version = File.exist?('VERSION') ? File.read('VERSION') : ""
+      puts @version
+      exit 0
+  end
+end
+rescue 
+  exit 0
+end
+if ARGV.length != 1
+  raise 'usage: corto [-h|-v] url_to_shrink'
+  exit 0
+end
+
+corto = Corto.new 
+s = corto.shrink(ARGV[0])
+if (!s.nil?) 
+  puts 'corto: ' + ARGV[0] + ' shrinked as ' + s
+else
+  puts 'corto: it seems ' + ARGV[0] + ' is not a valid url to shrink'
+end
+exit 0  

@@ -5,13 +5,15 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "corto"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.summary = %Q{corto is an url shortenizer gem}
+    gem.description = File.read(File.join(File.dirname(__FILE__), 'README'))
     gem.email = "thesp0nge@gmail.com"
+    gem.version = File.read(File.join(File.dirname(__FILE__), 'VERSION'))
     gem.homepage = "http://github.com/thesp0nge/corto"
     gem.authors = ["Paolo Perego"]
     gem.add_development_dependency "rspec", ">= 1.2.9"
     gem.add_development_dependency "yard", ">= 0"
+    gem.add_dependency "sqlite3", ">=0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new

@@ -1,7 +1,20 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe "Corto" do
-  it "fails" do
-    fail "hey buddy, you should probably rename this file and start specing for real"
+  let(:corto) {Corto.new('spec/data/test_db.db')}
+  it "should recreate a shortned url db" do
+    corto.purge
+    corto.count.should == 0
+  end
+  
+  it "should shrink an url" do
+    a = corto.shrink('http://www.armoredcode.com')
+    a.should.nil? == false
+  end
+  
+  it "should able to reverse a shrink" do
+    a = corto.shrink('http://www.armoredcode.com')
+    b = corto.deflate(a)
+    b.should == "http://www.armoredcode.com"
   end
 end
