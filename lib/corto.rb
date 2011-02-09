@@ -1,5 +1,4 @@
 require 'rubygems'
-require 'dm-core'
 require 'sqlite3'
 
 class Corto
