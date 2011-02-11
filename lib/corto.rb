@@ -45,9 +45,9 @@ class Corto
     url.hash.abs.to_s(36)
   end
   
-  def deflate(shrinked_url)
+  def deflate(shrunk_url)
     @db = SQLite3::Database.new(@db_name)
-    result = @db.execute("SELECT original FROM urls WHERE url='" +shrinked_url+"'")
+    result = @db.execute("SELECT original FROM urls WHERE url='" +shrunk_url+"'")
     (! result.first.nil?) ? result.first.first : nil
   end
   

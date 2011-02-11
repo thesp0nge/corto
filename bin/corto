@@ -53,7 +53,7 @@ corto = Corto.new
 if (shrink)
   s = corto.shrink(ARGV[0])
   if (!s.nil?) 
-    puts 'corto: ' + ARGV[0] + ' shrinked as ' + s
+    puts 'corto: ' + ARGV[0] + ' shrunk as ' + s
   else
     puts 'corto: it seems ' + ARGV[0] + ' is not a valid url to shrink'
   end
@@ -62,7 +62,7 @@ else
   if (!s.nil?) 
     puts 'corto: ' + ARGV[0] + ' deflated is ' + s
   else
-    puts 'corto: it seems ' + ARGV[0] + ' is not a known shrinked url'
+    puts 'corto: it seems ' + ARGV[0] + ' is not a known shrunk url'
   end
 end
 
