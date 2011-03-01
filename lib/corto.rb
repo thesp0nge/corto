@@ -6,9 +6,9 @@ class Corto
   attr_accessor :db_name
   attr_reader :db
   
-  def initialize (db_name = nil)
-    @db_name= db_name
-    @db_name= './db/corto.db' unless db_name
+  def initialize (options={})
+    @db_name= options["db_name"]
+    @db_name= './db/corto.db' unless options.has_key? "db_name"
     init_db
   end
   

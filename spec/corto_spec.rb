@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe "Corto" do
-  let(:corto) {Corto.new('spec/data/test_db.db')}
+  let(:corto) {Corto.new({"db_name"=>'spec/data/test_db.db'})}
   it "should recreate a shortned url db" do
     corto.purge
     corto.count.should == 0
