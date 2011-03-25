@@ -9,11 +9,20 @@ class Corto
   def initialize (options={})
     @db_name= options["db_name"]
     @db_name= './db/corto.db' unless options.has_key? "db_name"
-    init_db
+    @use_db= options["use_db"]
+    @use_db= true unless options.has_key? "use_db"
+
+    if @use_db
+      init_db
+    end
   end
   
   
   def purge
+    if ! @use_db
+      return nil 
+    end
+
     if File.exists?(@db_name)
       File.delete(@db_name)
     end
@@ -23,6 +32,9 @@ class Corto
   end
   
   def count
+    if ! @use_db
+      return -1 
+    end
     @db = SQLite3::Database.new(@db_name)
     count = @db.execute("SELECT COUNT(*) FROM urls;")
     @db.close
@@ -35,20 +47,26 @@ class Corto
     uri = URI::parse(url)
     return nil unless uri.kind_of? URI::HTTP or uri.kind_of? URI::HTTPS
     
-    @db = SQLite3::Database.new(@db_name)
-    count = @db.execute("SELECT COUNT(*) FROM urls WHERE url='" +url.hash.abs.to_s(36)+"'")
-    if count.first.first == 0
-      @db.execute("INSERT INTO urls (url, original) VALUES ('"+url.hash.abs.to_s(36)+ "', '"+url+"')")
+    if @use_db
+      @db = SQLite3::Database.new(@db_name)
+      count = @db.execute("SELECT COUNT(*) FROM urls WHERE url='" +url.hash.abs.to_s(36)+"'")
+      if count.first.first == 0
+        @db.execute("INSERT INTO urls (url, original) VALUES ('"+url.hash.abs.to_s(36)+ "', '"+url+"')")
+      end
+      @db.close
     end
-    @db.close
     
     url.hash.abs.to_s(36)
   end
   
   def deflate(shrunk_url)
-    @db = SQLite3::Database.new(@db_name)
-    result = @db.execute("SELECT original FROM urls WHERE url='" +shrunk_url+"'")
-    (! result.first.nil?) ? result.first.first : nil
+    if @use_db
+      @db = SQLite3::Database.new(@db_name)
+      result = @db.execute("SELECT original FROM urls WHERE url='" +shrunk_url+"'")
+      (! result.first.nil?) ? result.first.first : nil
+    else
+      nil
+    end
   end
   
   private
